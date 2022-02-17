@@ -130,7 +130,7 @@ void cmdlineInputFunc(unsigned char c)
 				// increment the edit position
 				CmdlineBufferEditPos++;
 				// move cursor forward one space (no erase)
-                xprintf_P(PSTR("%c[%c"),ASCII_ESC,VT100_ARROWRIGHT);
+                xprintf("%c[%c",ASCII_ESC,VT100_ARROWRIGHT);
 				//cmdlineOutputFunc(ASCII_ESC);
 				//cmdlineOutputFunc('[');
 				//cmdlineOutputFunc(VT100_ARROWRIGHT);
@@ -139,7 +139,7 @@ void cmdlineInputFunc(unsigned char c)
 			{
 				// else, ring the bell
 				//cmdlineOutputFunc(ASCII_BEL);
-                xprintf_P(PSTR("%c"),ASCII_BEL);
+                xprintf("%c",ASCII_BEL);
 			}
 			break;
 		case VT100_ARROWLEFT:
@@ -150,13 +150,13 @@ void cmdlineInputFunc(unsigned char c)
 				CmdlineBufferEditPos--;
 				// move cursor back one space (no erase)
 				//cmdlineOutputFunc(ASCII_BS);
-                xprintf_P(PSTR("%c"),ASCII_BS);
+                xprintf("%c",ASCII_BS);
 			}
 			else
 			{
 				// else, ring the bell
 				//cmdlineOutputFunc(ASCII_BEL);
-                xprintf_P(PSTR("%c"),ASCII_BEL);
+                xprintf("%c",ASCII_BEL);
 			}
 			break;
 		default:
@@ -214,7 +214,7 @@ void cmdlineInputFunc(unsigned char c)
 			// reposition cursor
 			for(i=CmdlineBufferEditPos; i<CmdlineBufferLength; i++)
 				//cmdlineOutputFunc(ASCII_BS);
-                xprintf_P(PSTR("%c"), ASCII_BS);
+                xprintf("%c", ASCII_BS);
 		}
 	}
 	// handle special characters
@@ -224,7 +224,7 @@ void cmdlineInputFunc(unsigned char c)
 		// echo CR and LF to terminal
 		//cmdlineOutputFunc(ASCII_CR);
 		//cmdlineOutputFunc(ASCII_LF);
-        xprintf_P(PSTR("\r\n"));
+        xprintf("\r\n");
         
 		// add null termination to command
 		CmdlineBuffer[CmdlineBufferLength++] = 0;
@@ -247,7 +247,7 @@ void cmdlineInputFunc(unsigned char c)
 				//cmdlineOutputFunc(ASCII_BS);
 				//cmdlineOutputFunc(' ');
 				//cmdlineOutputFunc(ASCII_BS);
-                xprintf_P(PSTR("%c %c"),ASCII_BS, ASCII_BS);
+                xprintf("%c %c",ASCII_BS, ASCII_BS);
 				// decrement our buffer length and edit position
 				CmdlineBufferLength--;
 				CmdlineBufferEditPos--;
@@ -269,14 +269,14 @@ void cmdlineInputFunc(unsigned char c)
 				// reposition cursor
 				for(i=CmdlineBufferEditPos; i<(CmdlineBufferLength+1); i++)
 					//cmdlineOutputFunc(ASCII_BS);
-                    xprintf_P(PSTR("%c"), ASCII_BS );
+                    xprintf("%c", ASCII_BS );
 			}
 		}
 		else
 		{
 			// else, ring the bell
 			//cmdlineOutputFunc(ASCII_BEL);
-             xprintf_P(PSTR("%c"), ASCII_BEL);
+             xprintf("%c", ASCII_BEL);
 		}
 	}
 	else if(c == ASCII_DEL)
@@ -296,14 +296,14 @@ void cmdlineRepaint(void)
 
 	// carriage return
 	//cmdlineOutputFunc(ASCII_CR);
-    xprintf_P(PSTR("%c"),ASCII_CR);
+    xprintf("%c",ASCII_CR);
 	// print fresh prompt
 	cmdlinePrintPrompt();
 	// print the new command line buffer
 	i = CmdlineBufferLength;
 	ptr = CmdlineBuffer;
 	//while(i--) cmdlineOutputFunc(*ptr++);
-    while(i--) xprintf_P(PSTR("%c"), *ptr++);
+    while(i--) xprintf("%c", *ptr++);
 }
 //------------------------------------------------------------------------------
 void cmdlineDoHistory(uint8_t action)
@@ -312,14 +312,14 @@ void cmdlineDoHistory(uint8_t action)
 	{
 	case CMDLINE_HISTORY_SAVE:
 		// copy CmdlineBuffer to history if not null string
-		if( strlen(CmdlineBuffer) )
-			strcpy(CmdlineHistory[0], CmdlineBuffer);
+		if( strlen( (const char*)CmdlineBuffer) )
+			strcpy( (char *)CmdlineHistory[0], (const char*)CmdlineBuffer);
 		break;
 	case CMDLINE_HISTORY_PREV:
 		// copy history to current buffer
-		strcpy(CmdlineBuffer, CmdlineHistory[0]);
+		strcpy( (char *)CmdlineBuffer, (const char*)CmdlineHistory[0]);
 		// set the buffer position to the end of the line
-		CmdlineBufferLength = strlen(CmdlineBuffer);
+		CmdlineBufferLength = strlen( (const char*)CmdlineBuffer);
 		CmdlineBufferEditPos = CmdlineBufferLength;
 		// "re-paint" line
 		cmdlineRepaint();
@@ -353,7 +353,7 @@ void cmdlineProcessInputString(void)
 	// search command list for match with entered command
 	for(cmdIndex=0; cmdIndex<CmdlineNumCommands; cmdIndex++)
 	{
-		if( !strncmp(CmdlineCommandList[cmdIndex], CmdlineBuffer, i) )
+		if( !strncmp( (const char*)CmdlineCommandList[cmdIndex], (const char*)CmdlineBuffer, i) )
 		{
 			// user-entered command matched a command in the list (database)
 			// run the corresponding function
@@ -387,7 +387,7 @@ void cmdlineMainLoop(void)
 //------------------------------------------------------------------------------
 void cmdlinePrintPrompt(void)
 {
-    xprintf_P(PSTR("cmd>"));
+    xprintf("cmd>");
 }
 //------------------------------------------------------------------------------
 void cmdlinePrintError(void)
@@ -395,17 +395,17 @@ void cmdlinePrintError(void)
 	uint8_t * ptr;
 
 	// print a notice header
-	xprintf_P(PSTR("cmdline: "));
+	xprintf("cmdline: ");
     
 	// print the offending command
 	ptr = CmdlineBuffer;
-	while((*ptr) && (*ptr != ' ')) xprintf_P(PSTR("%c"), *ptr++);
+	while((*ptr) && (*ptr != ' ')) xprintf("%c", *ptr++);
 
 	//cmdlineOutputFunc(':');
 	//cmdlineOutputFunc(' ');
 
 	// print the not-found message
-    xprintf_P(PSTR(": command not found\r\n"));
+    xprintf(": command not found\r\n");
 
 }
 //------------------------------------------------------------------------------
@@ -446,13 +446,13 @@ uint8_t idx=0;
 
     // Primer argumento si comienza al inicio del buffer
     if ( CmdlineBuffer[0] != ' ') {
-        argv[nro_args++] =  &CmdlineBuffer[0];
+        argv[nro_args++] =  (char *)&CmdlineBuffer[0];
     }
     
  	for ( idx=1; idx<(CMDLINE_BUFFERSIZE - 1); idx++ ) {
         if ( (CmdlineBuffer[idx-1] == ' ') && (CmdlineBuffer[idx] != ' ')) {
             CmdlineBuffer[idx-1] = '\0';
-            argv[nro_args++] =  &CmdlineBuffer[idx];
+            argv[nro_args++] =  (char *)&CmdlineBuffer[idx];
             if (nro_args == MAX_NUM_ARGS) 
                 goto quit;
         }

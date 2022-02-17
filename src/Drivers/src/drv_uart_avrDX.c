@@ -61,7 +61,22 @@ uart_control_t *pUart = NULL;
 		uart_ctl_3.usart = &USART3;
 		// Devuelvo la direccion de uart_gprs para que la asocie al dispositvo GPRS el frtos.
 		pUart = (uart_control_t *)&uart_ctl_3;
-		break;   
+		break; 
+        
+    case iUART4:
+		// Abro el puerto serial y fijo su velocidad
+        PORTE.DIR &= ~PIN1_bm;
+        PORTE.DIR |= PIN0_bm;
+        USART4.BAUD = (uint16_t)USART_SET_BAUD_RATE(baudrate);      
+		// Inicializo los ringBuffers que manejan el puerto. Son locales al driver.
+		rBchar_CreateStatic( &uart_ctl_4.RXringBuffer, &uart4_rxStorage[0], UART4_RXSTORAGE_SIZE );
+		rBchar_CreateStatic( &uart_ctl_4.TXringBuffer, &uart4_txStorage[0], UART4_TXSTORAGE_SIZE );
+		// Asigno el identificador
+		uart_ctl_4.uart_id = iUART4;
+		uart_ctl_4.usart = &USART4;
+		// Devuelvo la direccion de uart_gprs para que la asocie al dispositvo GPRS el frtos.
+		pUart = (uart_control_t *)&uart_ctl_4;
+		break; 
 	}
 
     // Lo hacemos por ioctl !!
@@ -103,7 +118,9 @@ void drv_uart_enable_tx_int( uart_id_t iUART )
     case iUART3:
 		USART3.CTRLA |= USART_DREIE_bm;
 		break;
-        
+    case iUART4:
+		USART4.CTRLA |= USART_DREIE_bm;
+		break;        
 	}
 }
 //------------------------------------------------------------------------------
@@ -117,6 +134,9 @@ void drv_uart_disable_tx_int( uart_id_t iUART )
 		break;
     case iUART3:
 		USART3.CTRLA &= USART_DREIE_bm;
+		break;
+    case iUART4:
+		USART4.CTRLA &= USART_DREIE_bm;
 		break;
 	}
 }
@@ -132,6 +152,9 @@ void drv_uart_enable_rx_int( uart_id_t iUART )
     case iUART3:
 		USART3.CTRLA |= USART_RXCIE_bm;
 		break;
+    case iUART4:
+		USART4.CTRLA |= USART_RXCIE_bm;
+		break;
 	}
 }
 //------------------------------------------------------------------------------
@@ -146,6 +169,9 @@ void drv_uart_disable_rx_int( uart_id_t iUART )
     case iUART3:
 		USART3.CTRLA &= ~USART_RXCIE_bm;
 		break;
+    case iUART4:
+		USART4.CTRLA &= ~USART_RXCIE_bm;
+		break;
 	}
 }
 //------------------------------------------------------------------------------
@@ -159,6 +185,9 @@ void drv_uart_enable_tx( uart_id_t iUART )
 		break;
     case iUART3:
 		USART3.CTRLB |= USART_TXEN_bm;
+		break;
+    case iUART4:
+		USART4.CTRLB |= USART_TXEN_bm;
 		break;
 	}
 
@@ -175,6 +204,9 @@ void drv_uart_disable_tx( uart_id_t iUART )
     case iUART3:
 		USART3.CTRLB &= ~USART_TXEN_bm;
 		break;
+    case iUART4:
+		USART4.CTRLB &= ~USART_TXEN_bm;
+		break;
 	}
 }
 //------------------------------------------------------------------------------
@@ -189,6 +221,9 @@ void drv_uart_enable_rx( uart_id_t iUART )
     case iUART3:
 		USART3.CTRLB |= USART_RXEN_bm;
 		break;
+    case iUART4:
+		USART4.CTRLB |= USART_RXEN_bm;
+		break;
 	}
 }
 //------------------------------------------------------------------------------
@@ -202,6 +237,9 @@ void drv_uart_disable_rx( uart_id_t iUART )
 		break;
     case iUART3:
 		USART3.CTRLB &= ~USART_RXEN_bm;
+		break;
+    case iUART4:
+		USART4.CTRLB &= ~USART_RXEN_bm;
 		break;
 	}
 }
@@ -238,7 +276,7 @@ char cChar = ' ';
 	}
 }
 //------------------------------------------------------------------------------
-// USART4: Terminal 
+// USART3: Terminal 
 //------------------------------------------------------------------------------
 */
 ISR(USART3_DRE_vect)
@@ -257,7 +295,7 @@ int8_t res = false;
 		drv_uart_interruptOff(uart_ctl_3.uart_id);
 	}
 }
-//----------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 ISR(USART3_RXC_vect)
 {
 
@@ -268,5 +306,36 @@ char cChar = ' ';
 		taskYIELD();
 	}
 }
-//----------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// USART4: LORA
+//------------------------------------------------------------------------------
+ISR(USART4_DRE_vect)
+{
+
+char cChar = ' ';
+int8_t res = false;
+
+	res = rBchar_Pop( &uart_ctl_4.TXringBuffer, (char *)&cChar );
+
+	if( res == true ) {
+		// Send the next character queued for Tx
+		USART4.TXDATAL = cChar;
+	} else {
+		// Queue empty, nothing to send.
+		drv_uart_interruptOff(uart_ctl_4.uart_id);
+	}
+}
+//------------------------------------------------------------------------------
+ISR(USART4_RXC_vect)
+{
+
+char cChar = ' ';
+
+	cChar = USART4.RXDATAL;
+ 	if( rBchar_PokeFromISR( &uart_ctl_4.RXringBuffer, &cChar ) ) {
+		taskYIELD();
+	}
+}
+//------------------------------------------------------------------------------
+
 

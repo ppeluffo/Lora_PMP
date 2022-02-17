@@ -22,13 +22,17 @@
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/AVRLibs/interrupt_avr8.h</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/AVRLibs/protected_io.S</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/AVRLibs/protected_io.h</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/AVRLibs/atmel_start_pins.h</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/AVRLibs/atmel_ports.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Drivers" projectFiles="true">
         <logicalFolder name="f1" displayName="include" projectFiles="true">
           <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/include/drv_uart_avrDX.h</itemPath>
+          <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/include/drv_i2c_avrDX.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="src" projectFiles="true">
           <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/src/drv_uart_avrDX.c</itemPath>
+          <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/src/drv_i2c_avrDX.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f3" displayName="FRTOS" projectFiles="true">
@@ -76,11 +80,11 @@
       </logicalFolder>
       <logicalFolder name="f5" displayName="Tasks" projectFiles="true">
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Tasks/LoraPMP_utils.c</itemPath>
-        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Tasks/LoraPMP_tkTerm.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Tasks/LoraPMP_tkCtl.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Tasks/LoraPMP_tkCmd.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Tasks/LoraPMP_main.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Tasks/LoraPMP.h</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Tasks/LoraPMP_tkLora.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="uLIBS" projectFiles="true">
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/cmdline.c</itemPath>
@@ -89,12 +93,16 @@
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/dac.h</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/led.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/led.h</itemPath>
-        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/pines.c</itemPath>
-        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/pines.h</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/ringBuffer.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/ringBuffer.h</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/xprintf.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/xprintf.h</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/lora.c</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/lora.h</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/nvmctrl_basic.h</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/nvmctrl_basic.c</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/linearBuffer.c</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/linearBuffer.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -103,6 +111,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/include</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="default" type="2">

@@ -66,52 +66,58 @@ extern "C" {
 #include <avr/io.h>
 #include <avr/builtins.h>
 #include <avr/wdt.h> 
+#include "nvmctrl_basic.h"
 
 #include "stdbool.h"
 
 #include "dac.h"
 #include "led.h"
-#include "pines.h"
+#include "lora.h"
 #include "xprintf.h"
 #include "frtos-io.h"
+#include "linearBuffer.h"
 
-#define FW_REV "1.0.0b"
-#define FW_DATE "@ 20220215"
+#define FW_REV "1.0.0c"
+#define FW_DATE "@ 20220217"
 #define HW_MODELO "LoraPMP R001 HW:AVR128DA64"
 #define FRTOS_VERSION "FW:FreeRTOS V202111.00"
 #define SYSMAINCLK 24
 
 
 #define tkCtl_TASK_PRIORITY	 		( tskIDLE_PRIORITY + 1 )
-#define tkTerm_TASK_PRIORITY	 	( tskIDLE_PRIORITY + 1 )
-#define tkCmd_TASK_PRIORITY	 	( tskIDLE_PRIORITY + 1 )
+#define tkLora_TASK_PRIORITY	 	( tskIDLE_PRIORITY + 1 )
+#define tkCmd_TASK_PRIORITY 	 	( tskIDLE_PRIORITY + 1 )
 
 #define tkCtl_STACK_SIZE		384
-#define tkTerm_STACK_SIZE		384
+#define tkLora_STACK_SIZE		384
 #define tkCmd_STACK_SIZE		384
 
 StaticTask_t xTask_Ctl_Buffer_Ptr;
 StackType_t xTask_Ctl_Buffer [tkCtl_STACK_SIZE];
 
-StaticTask_t xTask_Term_Buffer_Ptr;
-StackType_t xTask_Term_Buffer [tkTerm_STACK_SIZE];
+StaticTask_t xTask_Lora_Buffer_Ptr;
+StackType_t xTask_Lora_Buffer [tkLora_STACK_SIZE];
 
 StaticTask_t xTask_Cmd_Buffer_Ptr;
 StackType_t xTask_Cmd_Buffer [tkCmd_STACK_SIZE];
 
-TaskHandle_t xHandle_tkCtl, xHandle_tkTerm, xHandle_tkCmd;
+TaskHandle_t xHandle_tkCtl, xHandle_tkLora, xHandle_tkCmd;
 
 void LoraPMP_tkCtl(void * pvParameters);
-void LoraPMP_tkTerm(void * pvParameters);
+void LoraPMP_tkLora(void * pvParameters);
 void LoraPMP_tkCmd(void * pvParameters);
 
 void reset(void);
 void system_init();
 void load_defaults(void);
+void save_params_in_NVMEE(void);
+bool load_params_from_NVMEE(void);
+
+void printLoraResponse(void);
 
 struct {
     uint16_t dac_value;
-    uint8_t ac_freq;
+   
     
 } systemVars;
 

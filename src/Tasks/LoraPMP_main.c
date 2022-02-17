@@ -36,11 +36,12 @@ int main(void) {
 
     system_init();
     frtos_open(fdTERM, 115200 );
+    frtos_open(fdLORA,  57600 );
     xprintf_init();
     
     
     xHandle_tkCtl = xTaskCreateStatic( LoraPMP_tkCtl, "CTL", tkCtl_STACK_SIZE, (void *)1, tkCtl_TASK_PRIORITY, xTask_Ctl_Buffer, &xTask_Ctl_Buffer_Ptr );
-    xHandle_tkTerm = xTaskCreateStatic( LoraPMP_tkTerm, "TERM", tkTerm_STACK_SIZE, (void *)1, tkTerm_TASK_PRIORITY, xTask_Term_Buffer, &xTask_Term_Buffer_Ptr );
+    xHandle_tkLora = xTaskCreateStatic( LoraPMP_tkLora, "LORA", tkLora_STACK_SIZE, (void *)1, tkLora_TASK_PRIORITY, xTask_Lora_Buffer, &xTask_Lora_Buffer_Ptr );
     xHandle_tkCmd = xTaskCreateStatic( LoraPMP_tkCmd, "CMD", tkCmd_STACK_SIZE, (void *)1, tkCmd_TASK_PRIORITY, xTask_Cmd_Buffer, &xTask_Cmd_Buffer_Ptr );
 
 

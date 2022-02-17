@@ -26,6 +26,7 @@ int16_t frtos_open( file_descriptor_t fd, uint32_t flags)
 int16_t xRet = -1;
 
 	switch(fd) {
+        
 	case fdTERM:
 		xRet = frtos_uart_open( &xComTERM, fd, iUART3, flags );
         frtos_ioctl(fdTERM, ioctl_UART_ENABLE_RX, NULL );
@@ -34,6 +35,20 @@ int16_t xRet = -1;
         // No habilito la interrupcion de TX/DRIE porque transmito por poleo.
         //frtos_ioctl(fdTERM, ioctl_UART_ENABLE_TX_INT, NULL );
 		break;
+        
+    case fdLORA:
+		xRet = frtos_uart_open( &xComLORA, fd, iUART4, flags );
+        frtos_ioctl(fdLORA, ioctl_UART_ENABLE_RX, NULL );
+        frtos_ioctl(fdLORA, ioctl_UART_ENABLE_TX, NULL );
+        frtos_ioctl(fdLORA, ioctl_UART_ENABLE_RX_INT, NULL );
+        // No habilito la interrupcion de TX/DRIE porque transmito por poleo.
+        //frtos_ioctl(fdTERM, ioctl_UART_ENABLE_TX_INT, NULL );
+		break;
+      
+    case fdI2C:
+		xRet = frtos_i2c_open( &xBusI2C, fd, &I2C_xMutexBuffer, flags );
+		break;
+        
 	default:
 		break;
 	}
@@ -51,6 +66,15 @@ int16_t xRet = -1;
 	case fdTERM:
 		xRet = frtos_uart_ioctl( &xComTERM, ulRequest, pvValue );
 		break;
+        
+    case fdLORA:
+		xRet = frtos_uart_ioctl( &xComLORA, ulRequest, pvValue );
+		break;
+        
+    case fdI2C:
+		xRet = frtos_i2c_ioctl( &xBusI2C, ulRequest, pvValue );
+		break;
+        
 	default:
 		break;
 	}
@@ -64,9 +88,19 @@ int16_t frtos_write( file_descriptor_t fd ,const char *pvBuffer, const uint16_t 
 int16_t xRet = -1;
 
 	switch(fd) {
+        
 	case fdTERM:
 		xRet = frtos_uart_write_poll( &xComTERM, pvBuffer, xBytes );
 		break;
+        
+    case fdLORA:
+		xRet = frtos_uart_write_poll( &xComLORA, pvBuffer, xBytes );
+		break;
+        
+    case fdI2C:
+		xRet = frtos_i2c_write( &xBusI2C, pvBuffer, xBytes );
+		break; 
+        
 	default:
 		break;
 	}
@@ -79,11 +113,22 @@ void frtos_putchar( file_descriptor_t fd ,const char cChar )
 	// Escribe en el puerto (serial) en modo transparente.
 
 	switch(fd) {
+        
 	case fdTERM:
+		while ( ( USART3.STATUS & USART_DREIF_bm) == 0)
+			vTaskDelay( ( TickType_t)( 1 ) );
+		USART3.TXDATAL = cChar;
+		break;
+        
+    case fdLORA:
 		while ( ( USART4.STATUS & USART_DREIF_bm) == 0)
 			vTaskDelay( ( TickType_t)( 1 ) );
 		USART4.TXDATAL = cChar;
 		break;
+        
+    case fdI2C:
+		break;
+        
 	default:
 		break;
 	}
@@ -99,6 +144,15 @@ int16_t xRet = -1;
 	case fdTERM:
 		xRet = frtos_uart_read( &xComTERM, pvBuffer, xBytes );
 		break;
+    
+    case fdLORA:
+		xRet = frtos_uart_read( &xComLORA, pvBuffer, xBytes );
+		break;
+     
+    case fdI2C:
+		xRet = frtos_i2c_read( &xBusI2C, pvBuffer, xBytes );
+		break;
+        
 	default:
 		break;
 	}
@@ -305,4 +359,103 @@ TimeOut_t xTimeOut;
 	return ( xBytesReceived );
 
 }
-//------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// FUNCIONES ESPECIFICAS DEL BUS I2C/TWI
+//------------------------------------------------------------------------------
+int16_t frtos_i2c_open( periferico_i2c_port_t *xI2c, file_descriptor_t fd, StaticSemaphore_t *i2c_semph, uint32_t flags)
+{
+	// Asigno las funciones particulares ed write,read,ioctl
+	xI2c->fd = fd;
+	xI2c->xBusSemaphore = xSemaphoreCreateMutexStatic( i2c_semph );
+	xI2c->xBlockTime = (10 / portTICK_PERIOD_MS );
+	xI2c->i2c_error_code = I2C_OK;
+	//
+	// Abro e inicializo el puerto I2C solo la primera vez que soy invocado
+	drv_I2C_init();
+
+	return(1);
+}
+//------------------------------------------------------------------------------
+int16_t frtos_i2c_write( periferico_i2c_port_t *xI2c, const char *pvBuffer, const uint16_t xBytes )
+{
+
+int16_t xReturn = 0U;
+
+	if ( ( xReturn = drv_I2C_master_write (xI2c->devAddress, xI2c->dataAddress, xI2c->dataAddressLength,  (char *)pvBuffer, xBytes) ) >= 0 ) {
+		xI2c->i2c_error_code = I2C_OK;
+	} else {
+		// Error de escritura indicado por el driver.
+		xI2c->i2c_error_code = I2C_WR_ERROR;
+	}
+
+	return(xReturn);
+
+}
+//------------------------------------------------------------------------------
+int16_t frtos_i2c_ioctl( periferico_i2c_port_t *xI2c, uint32_t ulRequest, void *pvValue )
+{
+
+int16_t xReturn = 0;
+uint32_t *p = NULL;
+
+	p = pvValue;
+
+	switch( ulRequest )
+	{
+		case ioctl_OBTAIN_BUS_SEMPH:
+			// Espero el semaforo en forma persistente.
+			while ( xSemaphoreTake(xI2c->xBusSemaphore, ( TickType_t ) 5 ) != pdTRUE )
+				taskYIELD();
+			break;
+			case ioctl_RELEASE_BUS_SEMPH:
+				xSemaphoreGive( xI2c->xBusSemaphore );
+				break;
+			case ioctl_SET_TIMEOUT:
+				xI2c->xBlockTime = *p;
+				break;
+			case ioctl_I2C_SET_DEVADDRESS:
+				xI2c->devAddress = (int8_t)(*p);
+				break;
+			case ioctl_I2C_SET_DATAADDRESS:
+				xI2c->dataAddress = (uint16_t)(*p);
+				break;
+			case ioctl_I2C_SET_DATAADDRESSLENGTH:
+				xI2c->dataAddressLength = (int8_t)(*p);
+				break;
+			case ioctl_I2C_GET_LAST_ERROR:
+				xReturn = xI2c->i2c_error_code;
+				break;
+			case ioctl_I2C_SCAN:
+				//xReturn = drv_I2C_scan_device(xI2c->devAddress );
+				break;
+            case ioctl_I2C_SET_DEBUG:
+				drv_I2C_config_debug(true);
+				break;
+            case ioctl_I2C_CLEAR_DEBUG:
+				drv_I2C_config_debug(false);
+				break;                
+			default :
+				xReturn = -1;
+				break;
+		}
+
+	return xReturn;
+
+}
+//------------------------------------------------------------------------------
+int16_t frtos_i2c_read( periferico_i2c_port_t *xI2c, const char *pvBuffer, const uint16_t xBytes )
+{
+
+int16_t xReturn = 0U;
+
+
+	if ( ( xReturn = drv_I2C_master_read (xI2c->devAddress, xI2c->dataAddress, xI2c->dataAddressLength,  (char *)pvBuffer, xBytes) ) >= 0 ) {
+		xI2c->i2c_error_code = I2C_OK;
+	} else {
+		// Error de escritura indicado por el driver.
+		xI2c->i2c_error_code = I2C_RD_ERROR;
+	}
+
+    return(xReturn);
+}
+//------------------------------------------------------------------------------
