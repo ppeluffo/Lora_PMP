@@ -103,6 +103,8 @@
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/nvmctrl_basic.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/linearBuffer.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/linearBuffer.h</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/printf.c</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/printf.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -164,7 +166,7 @@
         <property key="default-bitfield-type" value="true"/>
         <property key="default-char-type" value="true"/>
         <property key="define-macros" value=""/>
-        <property key="disable-optimizations" value="false"/>
+        <property key="disable-optimizations" value="true"/>
         <property key="extra-include-directories"
                   value="/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/AVRLibs;/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/include;/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/FRTOS/include;/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/FRTOS-IO/include;/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Tasks;/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS"/>
         <property key="favor-optimization-for" value="-speed,+space"/>
@@ -179,7 +181,7 @@
         <property key="optimization-debug" value="false"/>
         <property key="optimization-invariant-enable" value="false"/>
         <property key="optimization-invariant-value" value="16"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value="-O0"/>
         <property key="optimization-speed" value="false"/>
         <property key="optimization-stable-enable" value="false"/>
         <property key="pack-struct" value="true"/>

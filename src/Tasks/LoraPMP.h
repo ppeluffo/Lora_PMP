@@ -77,7 +77,7 @@ extern "C" {
 #include "frtos-io.h"
 #include "linearBuffer.h"
 
-#define FW_REV "1.0.0c"
+#define FW_REV "1.0.0a"
 #define FW_DATE "@ 20220217"
 #define HW_MODELO "LoraPMP R001 HW:AVR128DA64"
 #define FRTOS_VERSION "FW:FreeRTOS V202111.00"
@@ -90,7 +90,7 @@ extern "C" {
 
 #define tkCtl_STACK_SIZE		384
 #define tkLora_STACK_SIZE		384
-#define tkCmd_STACK_SIZE		384
+#define tkCmd_STACK_SIZE		512
 
 StaticTask_t xTask_Ctl_Buffer_Ptr;
 StackType_t xTask_Ctl_Buffer [tkCtl_STACK_SIZE];
@@ -114,11 +114,10 @@ void save_params_in_NVMEE(void);
 bool load_params_from_NVMEE(void);
 
 void printLoraResponse(void);
+void clearLoraRxBuffer(void);
 
 struct {
     uint16_t dac_value;
-   
-    
 } systemVars;
 
 #endif	/* XC_HEADER_TEMPLATE_H */

@@ -19,12 +19,16 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "frtos-io.h"
+#include "printf.h"
 
 void xprintf_init(void);
 void xputChar( char c);
 int xnprint( const char *pvBuffer, const uint16_t xBytes );
 void xprintf_cmd( char *s );
+
 int xprintf( const char *fmt, ...);
+int xfprintf( uint8_t fd, const char *fmt, ...);
+
 int xprintf_P( PGM_P fmt, ...);
 
 #define BYTE_TO_BINARY_PATTERN %c%c%c%c%c%c%c%c

@@ -79,6 +79,16 @@
 #ifndef CMDLINE_H
 #define CMDLINE_H
 
+//----- Include Files ---------------------------------------------------------
+#include <avr/io.h>			// include I/O definitions (port names, pin names, etc)
+#include <avr/interrupt.h>	// include interrupt support
+#include <avr/pgmspace.h>	// include AVR program memory support
+#include <string.h>			// include standard C string functions
+#include <stdlib.h>			// include stdlib for string conversion functions
+#include "stdbool.h"
+
+#include "xprintf.h"
+
 // size of command database
 // (maximum number of commands the cmdline system can handle)
 #define CMDLINE_MAX_COMMANDS	10
@@ -131,6 +141,7 @@ void cmdlinePrintError(void);
 //! returns a string pointer to argument number [argnum] on the command line
 uint8_t* cmdlineGetArgStr(uint8_t argnum);
 uint8_t cmdlineMakeArgv(void);
+bool cmdlineExtractPayload(char *dst );
 
 #define MAX_NUM_ARGS 16
 char *argv[MAX_NUM_ARGS];

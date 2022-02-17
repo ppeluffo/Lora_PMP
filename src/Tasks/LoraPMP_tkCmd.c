@@ -26,6 +26,10 @@ static void pv_snprintfP_ERR(void );
 char *argv[MAX_NUM_ARGS];
 char test_buffer[MAX_LENGTH];
 
+
+#define PAYLOAD_SIZE    32
+
+
 //------------------------------------------------------------------------------
 void LoraPMP_tkCmd(void * pvParameters)
 {
@@ -138,9 +142,11 @@ static void cmdStatusFunction(void)
 //------------------------------------------------------------------------------
 static void cmdWriteFunction(void)
 {
-   cmdlineMakeArgv();
 
-   
+ char payload_buffer[PAYLOAD_SIZE];
+  
+    cmdlineMakeArgv();
+
     // DAC:
     // write dac {val}
     if ( strcmp( strupr(argv[1]),"DAC") == 0 ) {
@@ -151,9 +157,21 @@ static void cmdWriteFunction(void)
    
 	// LORA
 	// write lora cts,reset {on|off}
- 
+    // write lora cmd ...
     if ( strcmp( strupr(argv[1]),"LORA") == 0 ) {
  
+        if ( strcmp( strupr(argv[2]),"CMD") == 0 ) {
+            memset( &payload_buffer, '\0', PAYLOAD_SIZE );
+            
+            if ( cmdlineExtractPayload( &payload_buffer[0] ) ) {
+                xprintf("Lora cmd=[%s]\r\n",  &payload_buffer);
+                //xfprintf( fdTERM, "%s\r\n",  &payload_buffer);
+                xfprintf( fdLORA, "%s\r\n",  &payload_buffer);
+            }
+            pv_snprintfP_OK();
+            return;          
+        }
+        
         if ( strcmp( strupr(argv[2]),"CTS") == 0 ) {
             if ( strcmp( strupr(argv[3]),"ON") == 0 ) {
                 SET_LORA_CTS();
@@ -232,8 +250,19 @@ static void cmdReadFunction(void)
         pv_snprintfP_OK();
         return;
     }
+    
+    // LORA:
+    // read lora rsp
+    if ( strcmp( strupr(argv[1]),"LORA") == 0 ) {
+        if ( strcmp( strupr(argv[2]),"RSP") == 0 ) {
+            printLoraResponse();
+            pv_snprintfP_OK();
+            return;
+        }
+    }
+    
    
-        // CMD NOT FOUND
+    // CMD NOT FOUND
 	xprintf_P( PSTR("ERROR\r\nCMD NOT DEFINED\r\n\0"));
 	return;
 

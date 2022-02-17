@@ -20,14 +20,8 @@
 //*****************************************************************************
 
 //----- Include Files ---------------------------------------------------------
-#include <avr/io.h>			// include I/O definitions (port names, pin names, etc)
-#include <avr/interrupt.h>	// include interrupt support
-#include <avr/pgmspace.h>	// include AVR program memory support
-#include <string.h>			// include standard C string functions
-#include <stdlib.h>			// include stdlib for string conversion functions
-
 #include "cmdline.h"
-#include "xprintf.h"
+
 
 // defines
 #define ASCII_BEL				0x07
@@ -463,3 +457,40 @@ quit:
     return(nro_args);
 }
 //------------------------------------------------------------------------------
+bool cmdlineExtractPayload(char *dst ) 
+{
+    /*
+     Estrae de la linea de comando el string encerrado entre los delimitadores
+     */
+  
+uint8_t i;
+uint8_t pos = 0;
+//char dest[32];
+
+    // Recien el tercer argumento es el que tiene el payload.
+    if (argv[3] == NULL ) {
+        return(false);
+    }
+    
+    //memset(&dest, '\0', 32);
+
+    for (i=3; i < MAX_NUM_ARGS; i++) {
+        if (argv[i] == NULL ) {
+            break;
+        }
+        //xprintf("i=%d\r\n", i );
+       // xprintf("s=[%s]\r\n", argv[i]);
+        //xprintf("pos=%d\r\n", pos);
+        //strcpy(&dest[pos], argv[i] );
+        strcpy( &dst[pos], argv[i] );
+        pos += strlen(argv[i]);
+        //dest[pos++] = ' ';
+        //xprintf("DEST=%s\r\n", dest);
+        dst[pos++] = ' ';
+        //xprintf("DEST=%s\r\n", dst);  
+    }
+    dst[--pos] = '\0';
+    return(true);     
+}
+//------------------------------------------------------------------------------
+    

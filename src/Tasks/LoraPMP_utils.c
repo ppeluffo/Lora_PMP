@@ -120,7 +120,7 @@ uint16_t ee_rd_addr;
 
 	// systemVars.
 	ee_rd_addr = 0x00;
-	FLASH_0_read_eeprom_block(ee_rd_addr, (char *)&systemVars, sizeof(systemVars));
+	FLASH_0_read_eeprom_block(ee_rd_addr, (uint8_t *)&systemVars, sizeof(systemVars));
 	calculated_checksum = calc_checksum( (uint8_t *)&systemVars, sizeof(systemVars) );
 	ee_rd_addr += sizeof(systemVars);
 	stored_checksum = FLASH_0_read_eeprom_byte(ee_rd_addr);

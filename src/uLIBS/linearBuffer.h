@@ -27,12 +27,12 @@ extern "C" {
 //! cBuffer structure
 typedef struct struct_lBuffer
 {
-	unsigned char *buff;		///< the physical memory address where the buffer is stored
-	unsigned short size;		///< the allocated size of the buffer
-	unsigned short ptr;         ///< the index into the buffer where the data starts
+	char *buff;		///< the physical memory address where the buffer is stored
+	uint8_t size;		///< the allocated size of the buffer
+	uint8_t ptr;         ///< the index into the buffer where the data starts
 } lBuffer_s;
 
-void lBchar_CreateStatic ( lBuffer_s *lB, uint8_t *storage_area, uint16_t size  );
+void lBchar_CreateStatic ( lBuffer_s *lB, char *storage_area, uint16_t size  );
 bool lBchar_Poke( lBuffer_s *lB, char *cChar );
 bool lBchar_Pop( lBuffer_s *lB, char *cChar );
 void lBchar_Flush( lBuffer_s *lB );

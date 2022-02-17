@@ -2,9 +2,9 @@
 #include "linearBuffer.h"
 
 //------------------------------------------------------------------------------
-void lBchar_CreateStatic ( lBuffer_s *lB, uint8_t *storage_area, uint16_t size )
+void lBchar_CreateStatic ( lBuffer_s *lB, char *storage_area, uint16_t size )
 {
-   	lB->buff = storage_area;
+   	lB->buff = (char *)&storage_area;
 	lB->ptr = 0;	
 	lB->size = size;	
 }
