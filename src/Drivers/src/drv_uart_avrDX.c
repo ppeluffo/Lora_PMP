@@ -37,7 +37,8 @@ uart_control_t *pUart = NULL;
 		// Abro el puerto serial y fijo su velocidad
         PORTA.DIR &= ~PIN1_bm;
         PORTA.DIR |= PIN0_bm;
-        USART0.BAUD = (uint16_t)USART_SET_BAUD_RATE(baudrate);      
+        USART0.BAUD = (uint16_t)USART_SET_BAUD_RATE(baudrate);    
+        USART0.CTRLC = USART_CHSIZE_8BIT_gc | USART_PMODE_DISABLED_gc | USART_SBMODE_1BIT_gc;
 		// Inicializo los ringBuffers que manejan el puerto. Son locales al driver.
 		rBchar_CreateStatic( &uart_ctl_0.RXringBuffer, &uart0_rxStorage[0], UART0_RXSTORAGE_SIZE );
 		rBchar_CreateStatic( &uart_ctl_0.TXringBuffer, &uart0_txStorage[0], UART0_TXSTORAGE_SIZE );
@@ -52,7 +53,8 @@ uart_control_t *pUart = NULL;
 		// Abro el puerto serial y fijo su velocidad
         PORTB.DIR &= ~PIN1_bm;
         PORTB.DIR |= PIN0_bm;
-        USART3.BAUD = (uint16_t)USART_SET_BAUD_RATE(baudrate);      
+        USART3.BAUD = (uint16_t)USART_SET_BAUD_RATE(baudrate);     
+        USART3.CTRLC = USART_CHSIZE_8BIT_gc | USART_PMODE_DISABLED_gc | USART_SBMODE_1BIT_gc;
 		// Inicializo los ringBuffers que manejan el puerto. Son locales al driver.
 		rBchar_CreateStatic( &uart_ctl_3.RXringBuffer, &uart3_rxStorage[0], UART3_RXSTORAGE_SIZE );
 		rBchar_CreateStatic( &uart_ctl_3.TXringBuffer, &uart3_txStorage[0], UART3_TXSTORAGE_SIZE );
@@ -67,7 +69,8 @@ uart_control_t *pUart = NULL;
 		// Abro el puerto serial y fijo su velocidad
         PORTE.DIR &= ~PIN1_bm;
         PORTE.DIR |= PIN0_bm;
-        USART4.BAUD = (uint16_t)USART_SET_BAUD_RATE(baudrate);      
+        USART4.BAUD = (uint16_t)USART_SET_BAUD_RATE(baudrate);   
+        USART4.CTRLC = USART_CHSIZE_8BIT_gc | USART_PMODE_DISABLED_gc | USART_SBMODE_1BIT_gc;
 		// Inicializo los ringBuffers que manejan el puerto. Son locales al driver.
 		rBchar_CreateStatic( &uart_ctl_4.RXringBuffer, &uart4_rxStorage[0], UART4_RXSTORAGE_SIZE );
 		rBchar_CreateStatic( &uart_ctl_4.TXringBuffer, &uart4_txStorage[0], UART4_TXSTORAGE_SIZE );

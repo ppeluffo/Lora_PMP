@@ -75,10 +75,11 @@ extern "C" {
 #include "lora.h"
 #include "xprintf.h"
 #include "frtos-io.h"
-#include "linearBuffer.h"
+#include "ina3221.h"
+
 
 #define FW_REV "1.0.0a"
-#define FW_DATE "@ 20220217"
+#define FW_DATE "@ 20220222"
 #define HW_MODELO "LoraPMP R001 HW:AVR128DA64"
 #define FRTOS_VERSION "FW:FreeRTOS V202111.00"
 #define SYSMAINCLK 24
@@ -113,8 +114,6 @@ void load_defaults(void);
 void save_params_in_NVMEE(void);
 bool load_params_from_NVMEE(void);
 
-void printLoraResponse(void);
-void clearLoraRxBuffer(void);
 
 struct {
     uint16_t dac_value;

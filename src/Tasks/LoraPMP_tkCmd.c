@@ -60,7 +60,7 @@ uint8_t ticks = 0;
 	ticks = 5;
 	frtos_ioctl( fdTERM, ioctl_SET_TIMEOUT, &ticks );
 
-	xprintf( "\r\n\r\nstarting tkCmd..\r\n" );
+	xprintf( "\r\n\r\nstarting tkCmd VER: %s %s..\r\n", FW_REV, FW_DATE );
     
 	// loop
 	for( ;; )
@@ -85,7 +85,7 @@ static void cmdHelpFunction(void)
 		xprintf_P( PSTR("-write:\r\n"));
         xprintf_P( PSTR("   lora cts,reset {on|off}\r\n"));
         xprintf_P( PSTR("   lora cmd\r\n"));
-        xprintf_P( PSTR("   dac {val}\r\n"));
+        xprintf_P( PSTR("   flush, led, dac {val}\r\n"));
         
     }  else if ( strcmp( strupr(argv[1]), "CONFIG") == 0 ) {
 		xprintf_P( PSTR("-config:\r\n"));
@@ -94,7 +94,8 @@ static void cmdHelpFunction(void)
     }  else if ( strcmp( strupr(argv[1]), "READ") == 0 ) {
 		xprintf_P( PSTR("-read:\r\n"));
 		xprintf_P( PSTR("   eeprom\r\n"));
-        xprintf_P( PSTR("   lora rsp\r\n"));
+        xprintf_P( PSTR("   lora rsp, buffer\r\n"));
+        xprintf_P( PSTR("   ina {regName}\r\n"));
         
     }  else {
         // HELP GENERAL
@@ -160,12 +161,26 @@ static void cmdWriteFunction(void)
     // write lora cmd ...
     if ( strcmp( strupr(argv[1]),"LORA") == 0 ) {
  
+        if ( strcmp( strupr(argv[2]),"LED") == 0 ) {
+            lora_flash_led();
+            pv_snprintfP_OK();
+            return;
+        }
+        
+        
+        if ( strcmp( strupr(argv[2]),"FLUSH") == 0 ) {
+            lora_flush_RxBuffer();
+            pv_snprintfP_OK();
+            return;
+        }
+        
         if ( strcmp( strupr(argv[2]),"CMD") == 0 ) {
             memset( &payload_buffer, '\0', PAYLOAD_SIZE );
             
             if ( cmdlineExtractPayload( &payload_buffer[0] ) ) {
                 xprintf("Lora cmd=[%s]\r\n",  &payload_buffer);
                 //xfprintf( fdTERM, "%s\r\n",  &payload_buffer);
+                lora_flush_RxBuffer();
                 xfprintf( fdLORA, "%s\r\n",  &payload_buffer);
             }
             pv_snprintfP_OK();
@@ -189,12 +204,12 @@ static void cmdWriteFunction(void)
   
         if ( strcmp( strupr(argv[2]),"RESET") == 0 ) {
             if ( strcmp( strupr(argv[3]),"ON") == 0 ) {
-                SET_LORA_RESET();
+                lora_reset_on();
                 pv_snprintfP_OK();
                 return;
             }
             if ( strcmp( strupr(argv[3]),"OFF") == 0 ) {
-                CLEAR_LORA_RESET();
+                lora_reset_off();
                 pv_snprintfP_OK();
                 return;
             }
@@ -251,11 +266,25 @@ static void cmdReadFunction(void)
         return;
     }
     
+    // INA
+	// read ina id regName
+	if ( strcmp( strupr(argv[1]), "INA") == 0  ) {
+		ina3221_test_read( argv[2] );
+        pv_snprintfP_OK();
+        return;
+	}
+
     // LORA:
     // read lora rsp
     if ( strcmp( strupr(argv[1]),"LORA") == 0 ) {
         if ( strcmp( strupr(argv[2]),"RSP") == 0 ) {
-            printLoraResponse();
+            lora_print_RxBuffer();
+            pv_snprintfP_OK();
+            return;
+        }
+        
+        if ( strcmp( strupr(argv[2]),"BUFFER") == 0 ) {
+            lora_print_RxBuffer_stats();
             pv_snprintfP_OK();
             return;
         }

@@ -45,6 +45,8 @@
 	 * within a single implementation.
 	 */
 
+	// https://www.microchip.com/forums/m1162820.aspx
+	
 	PUBLIC_FUNCTION(protected_write_io)
 
 #if defined(__GNUC__)

@@ -1,0 +1,6 @@
+Desarrollo de Lora_PMP
+
+1) Hay algunos problemas erráticos con el manejo de char buffers y 
+esto se reduce o elimina al poner la "optimizacion" del compilador en 0.
+
+2)

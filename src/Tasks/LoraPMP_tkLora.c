@@ -8,9 +8,6 @@
 
 #include "LoraPMP.h"
 
-#define LORA_RX_BUFFER_SIZE 64
-char lora_rx_buffer[LORA_RX_BUFFER_SIZE];
-lBuffer_s lora_rx_sdata;
 
 //------------------------------------------------------------------------------
 void LoraPMP_tkLora(void * pvParameters)
@@ -23,8 +20,8 @@ uint8_t c = 0;
 
 	vTaskDelay( ( TickType_t)( 500 / portTICK_PERIOD_MS ) );
    
+    lora_reset_on();
 	xprintf( "\r\n\r\nstarting tkLora..\r\n" );
-    lBchar_CreateStatic(&lora_rx_sdata, (char *)&lora_rx_buffer, LORA_RX_BUFFER_SIZE );
             
 	// loop
 	for( ;; )
@@ -32,25 +29,8 @@ uint8_t c = 0;
 		c = '\0';	// Lo borro para que luego del un CR no resetee siempre el timer.
 		// el read se bloquea 50ms. lo que genera la espera.
 		while ( frtos_read( fdLORA, (char *)&c, 1 ) == 1 ) {
-            lBchar_Poke(&lora_rx_sdata,  (char *)&c);
+            lora_push_RxBuffer( (char *)&c );
         }
 	}   
-}
-//------------------------------------------------------------------------------
-void printLoraResponse(void)
-{
-    
-char *p;
-uint16_t xBytes = 0;
-
-    p = lBchar_get_buffer(&lora_rx_sdata);
-    xBytes = strlen(p);
-    xprintf("lbuff[%d]\r\n", xBytes);
-    
-}
-//------------------------------------------------------------------------------
-void clearLoraRxBuffer(void)
-{
-    lBchar_Flush(&lora_rx_sdata);
 }
 //------------------------------------------------------------------------------

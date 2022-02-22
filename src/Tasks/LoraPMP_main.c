@@ -37,6 +37,7 @@ int main(void) {
     system_init();
     frtos_open(fdTERM, 115200 );
     frtos_open(fdLORA,  57600 );
+    frtos_open(fdI2C,  100 );
     xprintf_init();
     
     

@@ -33,8 +33,12 @@ bool lBchar_Pop( lBuffer_s *lB, char *cChar )
 //------------------------------------------------------------------------------
 void lBchar_Flush( lBuffer_s *lB )
 {
+//uint8_t i;
+    
 	lB->ptr = 0;
-	memset(lB->buff,'\0', lB->size );
+	memset( (void *)lB->buff, (int)'y', (size_t)lB->size );
+    //for (i=0; i<lB->size; i++)
+    //    lB->buff[i] = 'p';
 }
 //------------------------------------------------------------------------------
 uint16_t lBchar_GetCount( lBuffer_s *lB )

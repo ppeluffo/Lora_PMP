@@ -6,7 +6,7 @@
  */
 
 #include "frtos-io.h"
-#include "util/delay.h"
+//#include "util/delay.h"
 
 //#define GPRS_IsTXDataRegisterEmpty() ((USARTE0.STATUS & USART_DREIF_bm) != 0)
 
@@ -433,6 +433,9 @@ uint32_t *p = NULL;
 				break;
             case ioctl_I2C_CLEAR_DEBUG:
 				drv_I2C_config_debug(false);
+				break;
+            case ioctl_I2C_RESET:
+				I2C_reset();
 				break;                
 			default :
 				xReturn = -1;

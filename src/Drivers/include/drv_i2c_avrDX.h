@@ -18,15 +18,7 @@ extern "C" {
 #include "xprintf.h"
 #include "task.h"
 #include "atmel_start_pins.h"
-
-#define I2C_DIRECTION_BIT_WRITE               0
-#define I2C_DIRECTION_BIT_READ                1
-#define I2C_SET_ADDR_POSITION(address)        (address << 1)
-#define I2C_SLAVE_RESPONSE_ACKED              (!(TWI_RXACK_bm & TWI1.MSTATUS))
-#define I2C_DATA_RECEIVED                     (TWI_RIF_bm & TWI1.MSTATUS)
-    
-    
-
+   
 int16_t drv_I2C_master_write ( const uint8_t devAddress, 
         const uint16_t dataAddress, 
         const uint8_t dataAddressLength, 
@@ -39,9 +31,10 @@ int16_t drv_I2C_master_read ( const uint8_t devAddress,
         char *pvBuffer, 
         size_t xBytes );
 
+
 void drv_I2C_init(void);
-void drv_I2C_reset(void);
 void drv_I2C_config_debug(bool debug_flag);
+void I2C_reset(void);
 
 #ifdef	__cplusplus
 }

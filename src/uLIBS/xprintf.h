@@ -8,7 +8,6 @@
 #ifndef SRC_SPX_LIBS_L_PRINTF_H_
 #define SRC_SPX_LIBS_L_PRINTF_H_
 
-
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 #include <avr/io.h>
@@ -19,7 +18,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "frtos-io.h"
-#include "printf.h"
+//#include "printf.h"
 
 void xprintf_init(void);
 void xputChar( char c);

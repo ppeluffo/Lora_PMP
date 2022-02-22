@@ -14,6 +14,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/include</sourceRootElem>
+                <sourceRootElem>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/src</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

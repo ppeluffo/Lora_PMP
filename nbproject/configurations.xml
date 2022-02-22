@@ -105,6 +105,8 @@
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/linearBuffer.h</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/printf.c</itemPath>
         <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/printf.h</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/ina3221.c</itemPath>
+        <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/ina3221.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -112,9 +114,11 @@
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/Bitacora_Lora_PMP.txt</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/include</Elem>
+    <Elem>/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/Drivers/src</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -159,6 +163,30 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <item path="/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/printf.c"
+            ex="true"
+            overriding="false">
+        <HI-TECH-COMP>
+        </HI-TECH-COMP>
+        <HI-TECH-LINK>
+        </HI-TECH-LINK>
+        <XC8-CO>
+        </XC8-CO>
+        <XC8-config-global>
+        </XC8-config-global>
+      </item>
+      <item path="/home/pablo/Spymovil/SPXR7/Terminal Lora Multipunto/Firmware/Lora_PMP.X/src/uLIBS/printf.h"
+            ex="true"
+            overriding="false">
+        <HI-TECH-COMP>
+        </HI-TECH-COMP>
+        <HI-TECH-LINK>
+        </HI-TECH-LINK>
+        <XC8-CO>
+        </XC8-CO>
+        <XC8-config-global>
+        </XC8-config-global>
+      </item>
       <HI-TECH-COMP>
         <property key="additional-warnings" value="true"/>
         <property key="asmlist" value="true"/>
